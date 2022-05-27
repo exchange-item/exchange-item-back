@@ -51,11 +51,13 @@ public class LoginController {
         else {
             log.info("The member is already sign up");
         }
-        //String jwtAccessToken = jwtUtils.createJwt(member);
+
         String jwtAccessToken = jwtUtils.createJwt(member);
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("jwtAccessToken", jwtAccessToken);
+        headers.set("nickname", member.getNickname());
+        headers.set("email", member.getEmail());
 
         log.info("headers = {}", headers);
         log.info("headers jwtAccessToken = {}", headers.get("jwtAccessToken"));
@@ -63,12 +65,4 @@ public class LoginController {
         return new ResponseEntity<>("로그인 성공", headers, HttpStatus.OK);
     }
 
-    @GetMapping("/hi")
-    public ResponseEntity<Object> hello() {
-        String jwtAccessToken = "abcd";
-        JwtAccessTokenDTO jwtAccessTokenDTO = new JwtAccessTokenDTO(jwtAccessToken);
-
-        return new ResponseEntity<>(jwtAccessTokenDTO, HttpStatus.OK);
-    }
-//res.data.
 }
