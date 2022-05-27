@@ -28,20 +28,8 @@ public class BoardServiceImpl implements BoardService {
 
     // 게시글 조회
     @Override
-    public Page<Board> findByCategoryId(final String category, final Pageable pageable) {
-        int categoryId;
-
-        if (category.equals("shoes")) {
-            categoryId = 1;
-        } else if (category.equals("sticker")) {
-            categoryId = 2;
-        } else {
-            categoryId = 3;
-        }
-
-        Page<Board> page = boardRepository.findByCategoryId(categoryId, pageable);
-
-        return page;
+    public Page<Board> findByCategoryId(final int categoryId, final Pageable pageable) {
+        return boardRepository.findByCategoryId(categoryId, pageable);
     }
 
     // 게시글 수정

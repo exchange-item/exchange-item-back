@@ -25,10 +25,10 @@ public class BoardController {
     }
 
     // 게시판 조회
-    @GetMapping("/boards/{category}")
-    public Page<BoardResponseDTO> findAll(@PathVariable final String category,
+    @GetMapping("/boards")
+    public Page<BoardResponseDTO> findAll(@RequestParam final int categoryId,
                                           @PageableDefault(sort = "post_id", direction = Sort.Direction.DESC) final Pageable pageable) {
-        return boardService.findByCategoryId(category, pageable).map(BoardResponseDTO::new);
+        return boardService.findByCategoryId(categoryId, pageable                                                                                                                                                ).map(BoardResponseDTO::new);
     }
 
     // 게시글 수정

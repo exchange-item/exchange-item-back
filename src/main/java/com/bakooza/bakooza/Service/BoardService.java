@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 public interface BoardService {
     public Long save(final BoardRequestDTO boardDTO);
 
-    public Page<Board> findByCategoryId(final String category, final Pageable pageable);
+    public Page<Board> findByCategoryId(final int categoryId, final Pageable pageable);
 
     public Long update(final Long id, final BoardRequestDTO params);
 
