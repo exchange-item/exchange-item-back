@@ -25,28 +25,28 @@ public class BoardController {
     }
 
     // 게시판 조회
-    @GetMapping("/boards")
+    @GetMapping("/boards") // 성공
     public Page<BoardResponseDTO> findAll(@RequestParam final int categoryId,
-                                          @PageableDefault(sort = "post_id", direction = Sort.Direction.DESC) final Pageable pageable) {
-        return boardService.findByCategoryId(categoryId, pageable                                                                                                                                                ).map(BoardResponseDTO::new);
+        @PageableDefault(sort = "post_id", direction = Sort.Direction.DESC) final Pageable pageable) {
+        return boardService.findByCategoryId(categoryId, pageable).map(BoardResponseDTO::new);
     }
 
     // 게시글 수정
-    @PatchMapping("/boards/{id}")
-    public Long update(@PathVariable final Long id, @RequestBody final BoardRequestDTO params) {
-        return boardService.update(id, params);
+    @PatchMapping("/boards/{postId}")
+    public Long update(@PathVariable final Long postId, @RequestBody final BoardRequestDTO params) {
+        return boardService.update(postId, params);
     }
 
     // 게시글 삭제
-    @DeleteMapping("/boards/{id}")
-    public Long delete(@PathVariable final Long id) {
-        return boardService.delete(id);
+    @DeleteMapping("/boards/{postId}")
+    public Long delete(@PathVariable final Long postId) {
+        return boardService.delete(postId);
     }
 
     // 게시글 검색
-    @GetMapping("/boards/search")
+    @GetMapping("/boards/search") // 성공
     public Page<BoardResponseDTO> search(@RequestParam final String keyword,
-                                         @PageableDefault(sort = "post_id", direction = Sort.Direction.DESC) final Pageable pageable) {
+        @PageableDefault(sort = "post_id", direction = Sort.Direction.DESC) final Pageable pageable) {
         return boardService.search(keyword, pageable).map(BoardResponseDTO::new);
     }
 
@@ -55,4 +55,10 @@ public class BoardController {
     public BoardResponseDTO findById(@PathVariable final Long postId) {
         return boardService.findById(postId);
     }
+
+    // 만료된 게시글 삭제 추후 스케쥴링
+//    @DeleteMapping("/delete")
+//    public int deleteExpiredPost(){
+//        return boardService.deleteExpiredPost();
+//    }
 }
