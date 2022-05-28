@@ -20,11 +20,11 @@
 
     <!-- Logger -->
     <logger name="com.board" level="DEBUG" appender-ref="console" />
-    <logger name="jdbc.sqlonly" level="INFO" appender-ref="console-infolog" />
-    <logger name="jdbc.resultsettable" level="INFO" appender-ref="console-infolog" />
+    <logger name="jdbc.sqlonly" level="DEBUG" appender-ref="console-infolog" />
+    <logger name="jdbc.resultsettable" level="DEBUG" appender-ref="console-infolog" />
 
     <!-- Root Logger -->
-    <root level="off">
+    <root level="DEBUG">
         <appender-ref ref="console" />
     </root>
 </configuration>

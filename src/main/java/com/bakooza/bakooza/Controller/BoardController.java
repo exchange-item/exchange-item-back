@@ -20,8 +20,8 @@ public class BoardController {
 
     // 게시글 작성
     @PostMapping("/boards")
-    public Long save(@RequestBody final BoardRequestDTO params) {
-        return boardService.save(params);
+    public void save(@RequestBody final BoardRequestDTO params) {
+        boardService.save(params);
     }
 
     // 게시판 조회
@@ -33,13 +33,13 @@ public class BoardController {
 
     // 게시글 수정
     @PatchMapping("/boards/{postId}")
-    public Long update(@PathVariable final Long postId, @RequestBody final BoardRequestDTO params) {
-        return boardService.update(postId, params);
+    public void update(@PathVariable final Long postId, @RequestBody final BoardRequestDTO params) {
+        boardService.update(postId, params);
     }
 
     // 게시글 삭제
     @DeleteMapping("/boards/{postId}")
-    public Long delete(@PathVariable final Long postId) {
+    public int delete(@PathVariable final Long postId) {
         return boardService.delete(postId);
     }
 
