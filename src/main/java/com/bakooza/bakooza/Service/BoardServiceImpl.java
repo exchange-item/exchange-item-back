@@ -13,8 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
-
 @Service
 @RequiredArgsConstructor
 public class BoardServiceImpl implements BoardService {
@@ -23,9 +21,8 @@ public class BoardServiceImpl implements BoardService {
 
     // 게시글 작성
     @Override
-    public Long save(final BoardRequestDTO params) {
-        Board entity = boardRepository.save(params.toEntity());
-        return entity.getPostId();
+    public void save(final BoardRequestDTO params) {
+        boardRepository.save(params.toEntity());
     }
 
     // 게시글 조회
@@ -36,11 +33,10 @@ public class BoardServiceImpl implements BoardService {
 
     // 게시글 수정
     @Override
-    public Long update(final Long postId, final BoardRequestDTO params) {
+    public void update(final Long postId, final BoardRequestDTO params) {
         Board entity = boardRepository.findById(postId)
             .orElseThrow(() -> new CustomException(ErrorCode.POSTS_NOT_FOUND));
         entity.update(params.getTitle(), params.getContent(), params.getWriter());
-        return postId;
     }
 
     // 게시글 삭제
@@ -50,10 +46,8 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public Long delete(Long postId) {
-        boardRepository.delete(postId)
-            .orElseThrow(() -> new CustomException(ErrorCode.POSTS_NOT_FOUND));
-        return postId;
+    public int delete(Long postId) {
+        return boardRepository.delete(postId);
     }
 
     // 게시글 검색
