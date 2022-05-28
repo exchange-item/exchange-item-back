@@ -1,8 +1,6 @@
 package com.bakooza.bakooza.Repository;
 
-import com.bakooza.bakooza.DTO.BoardResponseDTO;
 import com.bakooza.bakooza.Entity.Board;
-import lombok.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,8 +9,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import javax.annotation.PostConstruct;
-import java.util.List;
 import java.util.Optional;
 
 
@@ -31,11 +27,12 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     Page<Board> findByCategoryId(@Param("categoryId") final int categoryId,
         final Pageable pageable);
 
-    @Modifying
+    @Modifying(clearAutomatically = true)
     @Query(value = "DELETE FROM board WHERE DATEDIFF(CURDATE(), deleted_date) >= 7", nativeQuery = true)
     int deleteExpiredPost();
 
+    @Modifying(clearAutomatically = true)
     @Query(value = "UPDATE board SET is_deleted = 1, deleted_date = CURDATE() WHERE post_id = :postId", nativeQuery = true)
-    Optional<Long> delete(@Param("postId") Long postId);
+    int delete(@Param("postId") Long postId);
 
 }
