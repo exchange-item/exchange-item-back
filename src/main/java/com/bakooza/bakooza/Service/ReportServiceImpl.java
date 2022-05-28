@@ -5,18 +5,15 @@ import com.bakooza.bakooza.Entity.Report;
 import com.bakooza.bakooza.Repository.BoardRepository;
 import com.bakooza.bakooza.Repository.ReportRepository;
 import javax.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class ReportServiceImpl implements ReportService {
 
     private final ReportRepository reportRepository;
     private final BoardRepository boardRepository;
-
-    public ReportServiceImpl(ReportRepository reportRepository, BoardRepository boardRepository) {
-        this.reportRepository = reportRepository;
-        this.boardRepository = boardRepository;
-    }
 
     @Override
     @Transactional
