@@ -2,9 +2,9 @@ spring:
   datasource:
     hikari:
       driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
-      jdbc-url: jdbc:log4jdbc:mysql://localhost:3306/bakooza?serverTimezone=UTC&characterEncoding=UTF-8
+      jdbc-url: jdbc:log4jdbc:mysql://localhost:3306/exchange?serverTimezone=UTC&characterEncoding=UTF-8
       username: root
-      password: kang165
+      password: zswtd0428
       connection-test-query: SELECT NOW() FROM dual
   jpa:
     database: mysql
@@ -29,3 +29,20 @@ logging:
         type:
           descriptor:
             sql: trace
+
+server:
+  port: 9090
+
+my:
+  jwt:
+    secretKey: PKuqug3YctsBr0Kv0DZeWcGstNRe9Vsc
+    refreshKey: miuXdbBehAQwNZ5QGMk2ftRlHM3atoyG
+
+kakao:
+  clientId: 2350b8e96285792f176fa6327a6fcf88
+  redirectUri: https://0e6c-112-169-168-194.jp.ngrok.io/oauth
+  reqTokenUrl: https://kauth.kakao.com/oauth/token
+  reqUserDataUrl: https://kapi.kakao.com/v2/user/me
+
+
+
