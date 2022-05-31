@@ -24,18 +24,16 @@ public class RatingController {
 
     @PostMapping()
     public ResponseEntity<Object> ratingMember(@RequestBody RatingDTO ratingDTO) {
-        if(ratingDTO.getToken().equals("2250260102")) {
+        if(jwtUtils.validateToken(ratingDTO.getToken())) {
             log.info("인증완료");
             Long fromMemberId = 0L;
             Long toMemberId = 0L;
-            fromMemberId = Long.parseLong(ratingDTO.getToken());
+            fromMemberId = Long.parseLong(jwtUtils.getIdFromToken(ratingDTO.getToken()));
             toMemberId = ratingDTO.getMemberId();
 
-            log.info("hi");
             if(ratingService.isRating(fromMemberId, toMemberId)) {
                 // 평가 저장
                 int grade = ratingDTO.getGrade();
-                log.info("sasd");
                 ratingService.rating(fromMemberId, toMemberId, grade);
 
                 log.info("점수 저장");
