@@ -4,6 +4,7 @@ import com.bakooza.bakooza.DTO.BoardRequestDTO;
 import com.bakooza.bakooza.DTO.BoardResponseDTO;
 import com.bakooza.bakooza.Entity.Board;
 import com.bakooza.bakooza.Repository.BoardRepository;
+import com.bakooza.bakooza.Repository.PostImageRepository;
 import com.bakooza.bakooza.Util.ErrorHandler.CustomException;
 import com.bakooza.bakooza.Util.ErrorHandler.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -13,19 +14,23 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class BoardServiceImpl implements BoardService {
 
     private final BoardRepository boardRepository;
+    private final PostImageRepository postImageRepository;
 
     // 게시글 작성
     @Override
-    public void save(final BoardRequestDTO params) {
-        boardRepository.save(params.toEntity());
+    public Long save(final BoardRequestDTO params) {
+        return boardRepository.save(params.toEntity()).getPostId();
     }
 
-    // 게시글 조회
+    // 게시판 조회
     @Override
     public Page<Board> findByCategoryId(final int categoryId, final Pageable pageable) {
         return boardRepository.findByCategoryId(categoryId, pageable);
@@ -58,6 +63,7 @@ public class BoardServiceImpl implements BoardService {
         return boardRepository.findByTitleContainingAndIsDeleted("%" + keyword + "%", pageRequest);
     }
 
+    // 게시글 조회
     @Override
     public BoardResponseDTO findById(final Long postId) {
         Board entity = boardRepository.findByPostIdAndIsDeleted(postId, 0)

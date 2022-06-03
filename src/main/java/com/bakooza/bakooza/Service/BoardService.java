@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public interface BoardService {
 
-    public void save(final BoardRequestDTO boardDTO);
+    public Long save(final BoardRequestDTO boardDTO);
 
     public Page<Board> findByCategoryId(final int categoryId, final Pageable pageable);
 

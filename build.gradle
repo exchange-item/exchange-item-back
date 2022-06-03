@@ -26,6 +26,7 @@ dependencies {
 	implementation 'io.jsonwebtoken:jjwt-api'
 	implementation 'org.bgee.log4jdbc-log4j2:log4jdbc-log4j2-jdbc4.1:1.16'
 	implementation 'mysql:mysql-connector-java'
+	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 	compileOnly("org.bgee.log4jdbc-log4j2:log4jdbc-log4j2-jdbc4.1:1.16")
 	compileOnly("org.logback-extensions:logback-ext-spring:0.1.2")
 	compileOnly files("${System.properties['java.home']}/../lib/tools.jar")
