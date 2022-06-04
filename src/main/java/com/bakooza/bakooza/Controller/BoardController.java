@@ -9,10 +9,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/api")
@@ -32,7 +36,7 @@ public class BoardController {
     // 게시판 조회
     @GetMapping("/boards") // 성공
     public Page<BoardResponseDTO> findAll(@RequestParam final int categoryId,
-        @PageableDefault(sort = "post_id", direction = Sort.Direction.DESC) final Pageable pageable) {
+                                          @PageableDefault(sort = "post_id", direction = Sort.Direction.DESC) final Pageable pageable) {
         return boardService.findByCategoryId(categoryId, pageable).map(BoardResponseDTO::new);
     }
 
@@ -51,14 +55,17 @@ public class BoardController {
     // 게시글 검색
     @GetMapping("/boards/search") // 성공
     public Page<BoardResponseDTO> search(@RequestParam final String keyword,
-        @PageableDefault(sort = "post_id", direction = Sort.Direction.DESC) final Pageable pageable) {
+                                         @PageableDefault(sort = "post_id", direction = Sort.Direction.DESC) final Pageable pageable) {
         return boardService.search(keyword, pageable).map(BoardResponseDTO::new);
     }
 
     // 게시글 조회
     @GetMapping("/posts/{postId}")
-    public BoardResponseDTO findById(@PathVariable final Long postId) {
-        return boardService.findById(postId);
+    public ResponseEntity<Object> findById(@PathVariable final Long postId) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("post", boardService.findById(postId));
+        map.put("image", boardService.findByPostId(postId));
+        return new ResponseEntity<>(map, HttpStatus.OK);
     }
 
     // 만료된 게시글 삭제 추후 스케쥴링

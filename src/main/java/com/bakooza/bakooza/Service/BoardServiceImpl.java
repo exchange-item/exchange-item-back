@@ -2,7 +2,9 @@ package com.bakooza.bakooza.Service;
 
 import com.bakooza.bakooza.DTO.BoardRequestDTO;
 import com.bakooza.bakooza.DTO.BoardResponseDTO;
+import com.bakooza.bakooza.DTO.ImageResponseDTO;
 import com.bakooza.bakooza.Entity.Board;
+import com.bakooza.bakooza.Entity.PostImage;
 import com.bakooza.bakooza.Repository.BoardRepository;
 import com.bakooza.bakooza.Repository.PostImageRepository;
 import com.bakooza.bakooza.Util.ErrorHandler.CustomException;
@@ -14,7 +16,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -70,5 +71,12 @@ public class BoardServiceImpl implements BoardService {
             .orElseThrow(() -> new CustomException(ErrorCode.POSTS_NOT_FOUND));
         entity.increaseViews(); // 조회수 증가
         return new BoardResponseDTO(entity);
+    }
+
+    // 해당 게시글의 이미지 찾기
+    @Override
+    public List<ImageResponseDTO> findByPostId(Long postId) {
+        List<ImageResponseDTO> entity = postImageRepository.findByPostId(postId);
+        return entity;
     }
 }
