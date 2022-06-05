@@ -29,6 +29,8 @@ dependencies {
 	implementation 'org.jsoup:jsoup:1.14.3'
 	implementation 'com.fasterxml.jackson.core:jackson-databind'
 	implementation 'io.jsonwebtoken:jjwt-api'
+	implementation 'org.webjars:sockjs-client:1.0.2'
+	implementation 'org.webjars:stomp-websocket:2.3.3'
 	implementation 'org.bgee.log4jdbc-log4j2:log4jdbc-log4j2-jdbc4.1:1.16'
 	implementation 'mysql:mysql-connector-java'
 	compileOnly("org.bgee.log4jdbc-log4j2:log4jdbc-log4j2-jdbc4.1:1.16")
