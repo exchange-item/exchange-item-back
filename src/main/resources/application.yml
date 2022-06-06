@@ -24,6 +24,7 @@ spring:
 
 logging:
   level:
+    root: info
     org:
       hibernate:
         type:
@@ -39,10 +40,12 @@ my:
     refreshKey: miuXdbBehAQwNZ5QGMk2ftRlHM3atoyG
 
 kakao:
-  clientId: 2350b8e96285792f176fa6327a6fcf88
-  redirectUri: https://0e6c-112-169-168-194.jp.ngrok.io/oauth
+  clientId: 81ca0a296631fdb7314f692be88c2689
+  redirectUri: https://d1a4-222-117-215-187.ngrok.io/oauth/kakao/callback
   reqTokenUrl: https://kauth.kakao.com/oauth/token
   reqUserDataUrl: https://kapi.kakao.com/v2/user/me
+
+
 
 
 

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @RestController
 @Slf4j
@@ -20,6 +21,8 @@ public class LoginController {
 
     private final MemberService ms;
     private final JwtUtils jwtUtils;
+
+    private static int refreshTokenIndex = 0;
 
     public LoginController(MemberService ms, JwtUtils jwtUtils) {
         this.ms = ms;
@@ -52,20 +55,30 @@ public class LoginController {
         }
 
         String jwtAccessToken = jwtUtils.createJwt(member);
+        String refreshToken = jwtUtils.createRefreshToken(member);
+
+        AtomicInteger count = new AtomicInteger(refreshTokenIndex);
+        refreshTokenIndex = count.get();
+
+        log.info("refreshTokenIndex = {}", refreshTokenIndex);
+        log.info("refreshToken = {}" + refreshToken);
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("jwtAccessToken", jwtAccessToken);
+        headers.set("refreshTokenIndex", String.valueOf(refreshTokenIndex));
         headers.set("nickname", member.getNickname());
         headers.set("email", member.getEmail());
 
         log.info("headers = {}", headers);
         log.info("headers jwtAccessToken = {}", headers.get("jwtAccessToken"));
+        log.info("headers refreshTokenIndex" + headers.get("refreshTokenIndex"));
 
         return new ResponseEntity<>("로그인 성공", headers, HttpStatus.OK);
     }
 
     @GetMapping("hi")
     public ResponseEntity<Object> Hello() {
+        log.info("asdasd");
         return new ResponseEntity<>("hi~~", HttpStatus.OK);
     }
 
