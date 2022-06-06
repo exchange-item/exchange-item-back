@@ -3,8 +3,8 @@ spring:
     hikari:
       driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
       jdbc-url: jdbc:log4jdbc:mysql://localhost:3306/bakooza?serverTimezone=UTC&characterEncoding=UTF-8
-      username: root
-      password: kang165
+      username: **
+      password: **
       connection-test-query: SELECT NOW() FROM dual
   jpa:
     database: mysql

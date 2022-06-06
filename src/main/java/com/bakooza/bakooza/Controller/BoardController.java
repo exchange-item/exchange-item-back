@@ -5,6 +5,7 @@ import com.bakooza.bakooza.DTO.BoardResponseDTO;
 import com.bakooza.bakooza.DTO.ImageResponseDTO;
 import com.bakooza.bakooza.Service.AwsS3Service;
 import com.bakooza.bakooza.Service.BoardServiceImpl;
+import com.bakooza.bakooza.Service.JwtUtils;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Page;
@@ -28,25 +29,34 @@ public class BoardController {
 
     private final BoardServiceImpl boardService;
     private final AwsS3Service awsS3Service;
+    private final JwtUtils jwtUtils;
 
     // 게시글 작성
     @PostMapping("/write")
-    public ResponseEntity<Object> save(@RequestPart final BoardRequestDTO params, @RequestPart final List<MultipartFile> multipartFile) {
+    public ResponseEntity<Object> save(@RequestHeader(value = "token") String token, @RequestPart final BoardRequestDTO params, @RequestPart final List<MultipartFile> multipartFile) {
         boolean flag = false;
-        Long postId;
+        Long postId = null;
 
-        for (MultipartFile file : multipartFile) {
-            if (file.isEmpty()) {
-                flag = true;
+        if (jwtUtils.validateToken(token)) {
+            for (MultipartFile file : multipartFile) {
+                if (file.isEmpty()) {
+                    flag = true;
+                }
             }
+
+            if (flag) { // 이미지 파일이 첨부되어 있지 않다면
+                postId = boardService.save(params);
+            } else { // 이미지 파일이 첨부되어 있다면
+                postId = awsS3Service.uploadFile(multipartFile, boardService.save(params));
+            }
+            return findById(postId);
+        } else {
+            Map<String, Object> fail = new HashMap<>();
+            fail.put("fail", "fail");
+
+            return new ResponseEntity<>(fail, HttpStatus.UNAUTHORIZED);
         }
 
-        if (flag) { // 이미지 파일이 첨부되어 있지 않다면
-            postId = boardService.save(params);
-        } else { // 이미지 파일이 첨부되어 있다면
-            postId = awsS3Service.uploadFile(multipartFile, boardService.save(params));
-        }
-        return findById(postId);
     }
 
     // 게시판 조회
@@ -58,36 +68,50 @@ public class BoardController {
 
     // 게시글 수정
     @PatchMapping("/{postId}")
-    public ResponseEntity<Object> update(@PathVariable final Long postId, @RequestPart final BoardRequestDTO params, @RequestPart(required = false) final @NotNull List<MultipartFile> multipartFile) {
-        boardService.update(postId, params);
-        boolean flag = false;
-        for (MultipartFile file : multipartFile) {
-            if (file.isEmpty()) {
-                flag = true;
+    public ResponseEntity<Object> update(@RequestHeader(value = "token") String token, @PathVariable final Long postId, @RequestPart final BoardRequestDTO params, @RequestPart(required = false) final @NotNull List<MultipartFile> multipartFile) {
+        if (jwtUtils.validateToken(token)) {
+            boardService.update(postId, params);
+            boolean flag = false;
+            for (MultipartFile file : multipartFile) {
+                if (file.isEmpty()) {
+                    flag = true;
+                }
             }
-        }
 
-        List<ImageResponseDTO> entity = boardService.findByPostId(postId); // S3의 경로를 찾아오고
-        for (ImageResponseDTO imageResponseDTO : entity) {
-            awsS3Service.deleteFile(imageResponseDTO.getImagePath()); // S3에서 삭제
-        }
+            List<ImageResponseDTO> entity = boardService.findByPostId(postId); // S3의 경로를 찾아오고
+            for (ImageResponseDTO imageResponseDTO : entity) {
+                awsS3Service.deleteFile(imageResponseDTO.getImagePath()); // S3에서 삭제
+            }
 
-        if (!flag) { // 새로 업로드하려는 파일이 있다면 기존의 파일 삭제 후 추가
-            awsS3Service.uploadFile(multipartFile, postId); // 새 파일 추가
-        }
+            if (!flag) { // 새로 업로드하려는 파일이 있다면 기존의 파일 삭제 후 추가
+                awsS3Service.uploadFile(multipartFile, postId); // 새 파일 추가
+            }
 
-        return findById(postId);
+            return findById(postId);
+        } else {
+            Map<String, Object> fail = new HashMap<>();
+            fail.put("fail", "fail");
+
+            return new ResponseEntity<>(fail, HttpStatus.UNAUTHORIZED);
+        }
     }
 
     // 게시글 삭제
     @DeleteMapping("/{postId}")
-    public Long delete(@PathVariable final Long postId) {
-        List<ImageResponseDTO> entity = boardService.findByPostId(postId); // S3의 경로를 먼저 찾아오고
-        boardService.delete(postId); // DB에서 삭제
-        for (ImageResponseDTO imageResponseDTO : entity) {
-            awsS3Service.deleteFile(imageResponseDTO.getImagePath()); // S3에서도 삭제
+    public ResponseEntity<Object> delete(@RequestHeader(value = "token") String token, @PathVariable final Long postId) {
+        if (jwtUtils.validateToken(token)) {
+            List<ImageResponseDTO> entity = boardService.findByPostId(postId); // S3의 경로를 먼저 찾아오고
+            boardService.delete(postId); // DB에서 삭제
+            for (ImageResponseDTO imageResponseDTO : entity) {
+                awsS3Service.deleteFile(imageResponseDTO.getImagePath()); // S3에서도 삭제
+            }
+            return new ResponseEntity<>(postId, HttpStatus.UNAUTHORIZED);
+        } else {
+            Map<String, Object> fail = new HashMap<>();
+            fail.put("fail", "fail");
+
+            return new ResponseEntity<>(fail, HttpStatus.UNAUTHORIZED);
         }
-        return postId;
     }
 
     // 게시글 검색
