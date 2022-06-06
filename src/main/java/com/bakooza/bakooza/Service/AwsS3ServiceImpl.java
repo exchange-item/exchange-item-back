@@ -5,6 +5,7 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.util.CollectionUtils;
 import com.bakooza.bakooza.Entity.PostImage;
 import com.bakooza.bakooza.Repository.PostImageRepository;
 import lombok.RequiredArgsConstructor;
@@ -33,49 +34,49 @@ public class AwsS3ServiceImpl implements AwsS3Service {
     private final AmazonS3 amazonS3;
     private final PostImageRepository postImageRepository;
 
-    public List<String> uploadFile(List<MultipartFile> multipartFile, Long postId) {
+    public Long uploadFile(List<MultipartFile> multipartFile, Long postId) {
         List<String> fileNameList = new ArrayList<>();
 
         // forEach 구문을 통해 multipartFile로 넘어온 파일들 하나씩 fileNameList에 추가
-        multipartFile.forEach(file -> {
-            String fileName = createFileName(file.getOriginalFilename());
-            ObjectMetadata objectMetadata = new ObjectMetadata();
-            objectMetadata.setContentLength(file.getSize());
-            objectMetadata.setContentType(file.getContentType());
+        if (!multipartFile.isEmpty()) {
+            multipartFile.forEach(file -> {
+                String fileName = createFileName(file.getOriginalFilename());
+                ObjectMetadata objectMetadata = new ObjectMetadata();
+                objectMetadata.setContentLength(file.getSize());
+                objectMetadata.setContentType(file.getContentType());
 
-            try (InputStream inputStream = file.getInputStream()) {
-                amazonS3.putObject(new PutObjectRequest(bucket, fileName, inputStream, objectMetadata)
-                                           .withCannedAcl(CannedAccessControlList.PublicRead)); // 누구나 볼 수 있도록 PublicRead
-            } catch (IOException e) {
-                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "파일 업로드에 실패했습니다.");
-            }
+                try (InputStream inputStream = file.getInputStream()) {
+                    amazonS3.putObject(new PutObjectRequest(bucket, fileName, inputStream, objectMetadata)
+                                               .withCannedAcl(CannedAccessControlList.PublicRead)); // 누구나 볼 수 있도록 PublicRead
+                } catch (IOException e) {
+                    throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "파일 업로드에 실패했습니다.");
+                }
 
-            DecimalFormat decimalFormat = new DecimalFormat("0.00");
-            float size = (float) file.getSize() / 1024; // kb
-            String unit = "KB";
-            if (size > 1024) {
-                size /= 1024; // mb
-                unit = "MB";
-            }
+                DecimalFormat decimalFormat = new DecimalFormat("0.00");
+                float size = (float) file.getSize() / 1024; // kb
+                String unit = "KB";
+                if (size > 1024) {
+                    size /= 1024; // mb
+                    unit = "MB";
+                }
 
-            PostImage postImage = PostImage.builder()
-                    .postId(postId)
-                    .imagePath(fileName)
-                    .imageSize(decimalFormat.format(size) + unit)
-                    .uploadDate(LocalDate.now())
-                    .build();
+                PostImage postImage = PostImage.builder()
+                        .postId(postId)
+                        .imagePath(fileName)
+                        .imageSize(decimalFormat.format(size) + unit)
+                        .uploadDate(LocalDate.now())
+                        .build();
 
-            postImageRepository.save(postImage);
-            System.out.println(fileName);
+                postImageRepository.save(postImage);
+            });
+        }
 
-            fileNameList.add(fileName);
-        });
-
-        return fileNameList;
+        return postId;
     }
 
     public void deleteFile(String fileName) { // 이미지 삭제
         amazonS3.deleteObject(new DeleteObjectRequest(bucket, fileName));
+        postImageRepository.deleteByImagePath(fileName);
     }
 
     private String createFileName(String fileName) { // 생성된 날짜를 이름으로 하는 폴더에 UUID를 이용해 파일의 이름이 겹치지 않도록 함

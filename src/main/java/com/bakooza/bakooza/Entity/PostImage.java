@@ -32,7 +32,7 @@ public class PostImage {
     private LocalDate uploadDate;
 
     @Builder
-    public PostImage(String imagePath, Long postId, String imageSize, LocalDate uploadDate) {
+    public PostImage(Long postId, String imagePath, String imageSize, LocalDate uploadDate) {
         this.postId = postId;
         this.imagePath = imagePath;
         this.imageSize = imageSize;

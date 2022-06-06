@@ -1,11 +1,13 @@
 package com.bakooza.bakooza.Service;
 
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
+@Transactional
 public interface AwsS3Service {
-    public List<String> uploadFile(List<MultipartFile> multipartFile, Long postId);
+    public Long uploadFile(List<MultipartFile> multipartFile, Long postId);
 
     public void deleteFile(String fileName);
 

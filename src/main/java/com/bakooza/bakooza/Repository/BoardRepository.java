@@ -33,7 +33,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 
     @Modifying(clearAutomatically = true)
     @Query(value = "UPDATE board SET is_deleted = 1, deleted_date = CURDATE() WHERE post_id = :postId", nativeQuery = true)
-    int delete(@Param("postId") Long postId);
+    void delete(@Param("postId") Long postId);
 
     @Modifying(clearAutomatically = true)
     @Query(value = "UPDATE board SET is_deleted = 1, deleted_date = CURDATE() WHERE post_id = :postId", nativeQuery = true)

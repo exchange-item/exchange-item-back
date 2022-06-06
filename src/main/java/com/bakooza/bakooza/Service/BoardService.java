@@ -21,7 +21,7 @@ public interface BoardService {
 
     public int deleteExpiredPost();
 
-    public int delete(final Long postId);
+    public void delete(final Long postId);
 
     public Page<Board> search(final String keyword, final Pageable pageable);
 

@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface PostImageRepository extends JpaRepository<PostImage, String> {
     List<ImageResponseDTO> findByPostId(Long postId);
+    void deleteByPostId(Long postId);
+    void deleteByImagePath(String fileName);
 }

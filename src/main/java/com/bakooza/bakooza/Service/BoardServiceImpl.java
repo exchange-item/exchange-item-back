@@ -52,8 +52,9 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public int delete(Long postId) {
-        return boardRepository.delete(postId);
+    public void delete(Long postId) {
+        boardRepository.delete(postId);
+        postImageRepository.deleteByPostId(postId);
     }
 
     // 게시글 검색

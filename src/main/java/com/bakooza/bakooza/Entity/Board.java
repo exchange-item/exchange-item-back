@@ -21,7 +21,7 @@ public class Board {
     private String title; // 제목
 
     @Column(name = "user_address")
-    private String userAddress; // 작성자 주소
+    private String userLocation; // 작성자 주소
 
     private String content; // 내용
 
@@ -45,11 +45,11 @@ public class Board {
     private int isDeleted; // 글쓴이가 글을 지웠는지
 
     @Builder
-    public Board(long postId, String title, String userAddress, String content, String writer,
+    public Board(long postId, String title, String userLocation, String content, String writer,
         int categoryId, long memberId) {
         this.postId = postId;
         this.title = title;
-        this.userAddress = userAddress;
+        this.userLocation = userLocation;
         this.content = content;
         this.writer = writer;
         this.categoryId = categoryId;
