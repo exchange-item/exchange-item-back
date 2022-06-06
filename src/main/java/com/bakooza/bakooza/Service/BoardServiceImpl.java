@@ -42,7 +42,7 @@ public class BoardServiceImpl implements BoardService {
     public void update(final Long postId, final BoardRequestDTO params) {
         Board entity = boardRepository.findById(postId)
             .orElseThrow(() -> new CustomException(ErrorCode.POSTS_NOT_FOUND));
-        entity.update(params.getTitle(), params.getContent(), params.getWriter());
+        entity.update(params.getTitle(), params.getContent(), params.getCategoryId(), params.getWriter());
     }
 
     // 게시글 삭제

@@ -22,7 +22,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
         final Pageable pageable);
 
     @Query(value = "SELECT * FROM board WHERE category_id = :categoryId AND is_deleted = false ORDER BY post_id DESC",
-        countQuery = "SELECT COUNT(post_id) FROM Board",
+        countQuery = "SELECT COUNT(post_id) FROM Board WHERE category_id = :categoryId AND is_deleted = false",
         nativeQuery = true)
     Page<Board> findByCategoryId(@Param("categoryId") final int categoryId,
         final Pageable pageable);

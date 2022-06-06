@@ -56,9 +56,10 @@ public class Board {
         this.memberId = memberId;
     }
 
-    public void update(String title, String content, String writer) {
+    public void update(String title, String content, int categoryId, String writer) {
         this.title = title;
         this.content = content;
+        this.categoryId = categoryId;
         this.writer = writer;
         this.modifiedDate = LocalDateTime.now();
     }
