@@ -1,7 +1,7 @@
 package com.bakooza.bakooza.Service;
 
 import com.bakooza.bakooza.DTO.BoardRequestDTO;
-import com.bakooza.bakooza.DTO.BoardResponseDTO;
+import com.bakooza.bakooza.DTO.DetailBoardResponseDTO;
 import com.bakooza.bakooza.DTO.ImageResponseDTO;
 import com.bakooza.bakooza.Entity.Board;
 import org.springframework.data.domain.Page;
@@ -25,7 +25,7 @@ public interface BoardService {
 
     public Page<Board> search(final String keyword, final Pageable pageable);
 
-    public BoardResponseDTO findById(final Long postId);
+    public DetailBoardResponseDTO findById(final Long postId);
 
     public List<ImageResponseDTO> findByPostId(Long postId);
 }

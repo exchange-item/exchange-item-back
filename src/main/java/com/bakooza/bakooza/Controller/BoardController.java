@@ -32,31 +32,10 @@ public class BoardController {
     private final JwtUtils jwtUtils;
 
     // 게시글 작성
-    @PostMapping("/write")
-    public ResponseEntity<Object> save(@RequestHeader(value = "token") String token, @RequestPart final BoardRequestDTO params, @RequestPart final List<MultipartFile> multipartFile) {
-        boolean flag = false;
-        Long postId = null;
-
-        if (jwtUtils.validateToken(token)) {
-            for (MultipartFile file : multipartFile) {
-                if (file.isEmpty()) {
-                    flag = true;
-                }
-            }
-
-            if (flag) { // 이미지 파일이 첨부되어 있지 않다면
-                postId = boardService.save(params);
-            } else { // 이미지 파일이 첨부되어 있다면
-                postId = awsS3Service.uploadFile(multipartFile, boardService.save(params));
-            }
-            return findById(postId);
-        } else {
-            Map<String, Object> fail = new HashMap<>();
-            fail.put("fail", "fail");
-
-            return new ResponseEntity<>(fail, HttpStatus.UNAUTHORIZED);
-        }
-
+    @PostMapping()
+    public ResponseEntity<Object> save(@RequestHeader(value = "token") String token, @RequestPart final BoardRequestDTO params) {
+        Long postId = boardService.save(params);
+        return findById(postId);
     }
 
     // 게시판 조회

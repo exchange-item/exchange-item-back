@@ -2,6 +2,7 @@ package com.bakooza.bakooza.Service;
 
 import com.bakooza.bakooza.DTO.BoardRequestDTO;
 import com.bakooza.bakooza.DTO.BoardResponseDTO;
+import com.bakooza.bakooza.DTO.DetailBoardResponseDTO;
 import com.bakooza.bakooza.DTO.ImageResponseDTO;
 import com.bakooza.bakooza.Entity.Board;
 import com.bakooza.bakooza.Entity.PostImage;
@@ -67,11 +68,11 @@ public class BoardServiceImpl implements BoardService {
 
     // 게시글 조회
     @Override
-    public BoardResponseDTO findById(final Long postId) {
+    public DetailBoardResponseDTO findById(final Long postId) {
         Board entity = boardRepository.findByPostIdAndIsDeleted(postId, 0)
             .orElseThrow(() -> new CustomException(ErrorCode.POSTS_NOT_FOUND));
         entity.increaseViews(); // 조회수 증가
-        return new BoardResponseDTO(entity);
+        return new DetailBoardResponseDTO(entity);
     }
 
     // 해당 게시글의 이미지 찾기
