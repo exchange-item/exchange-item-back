@@ -7,8 +7,8 @@
             <Pattern>%d %5p [%c] %m%n</Pattern>
         </encoder>
     </appender>
-    <logger name="org.springframework.orm.jpa.JpaTransactionManager" level="DEBUG"/>
-    <root level="debug">
+    <logger name="org.springframework.orm.jpa.JpaTransactionManager" level="INFO"/>
+    <root level="INFO">
         <appender-ref ref="console"/> <!-- Console에 로그를 출력하고자 할 때 사용 -->
     </root>
 
@@ -19,12 +19,12 @@
     </appender>
 
     <!-- Logger -->
-    <logger name="com.board" level="DEBUG" appender-ref="console" />
+    <logger name="com.board" level="INFO" appender-ref="console" />
     <logger name="jdbc.sqlonly" level="INFO" appender-ref="console-infolog" />
     <logger name="jdbc.resultsettable" level="INFO" appender-ref="console-infolog" />
 
     <!-- Root Logger -->
-    <root level="off">
+    <root level="INFO">
         <appender-ref ref="console" />
     </root>
 </configuration>

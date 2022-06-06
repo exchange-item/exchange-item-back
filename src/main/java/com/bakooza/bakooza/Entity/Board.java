@@ -21,7 +21,7 @@ public class Board {
     private String title; // 제목
 
     @Column(name = "user_address")
-    private String userAddress; // 작성자 주소
+    private String userLocation; // 작성자 주소
 
     private String content; // 내용
 
@@ -45,27 +45,30 @@ public class Board {
     private int isDeleted; // 글쓴이가 글을 지웠는지
 
     @Builder
-    public Board(long postId, String title, String userAddress, String content, String writer, int categoryId, long memberId) {
+    public Board(long postId, String title, String userLocation, String content, String writer,
+        int categoryId, long memberId) {
         this.postId = postId;
         this.title = title;
-        this.userAddress = userAddress;
+        this.userLocation = userLocation;
         this.content = content;
         this.writer = writer;
         this.categoryId = categoryId;
         this.memberId = memberId;
     }
 
-    public void update(String title, String content, String writer) {
+    public void update(String title, String content, int categoryId, String writer) {
         this.title = title;
         this.content = content;
+        this.categoryId = categoryId;
         this.writer = writer;
         this.modifiedDate = LocalDateTime.now();
     }
 
-    public void increaseViews(){
+    public void increaseViews() {
         this.views++;
     }
-    public void delete(){
+
+    public void delete() {
         this.isDeleted = 1;
     }
 }
