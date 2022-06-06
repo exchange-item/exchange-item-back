@@ -66,7 +66,7 @@ public class JwtUtils {
         String refreshToken = Jwts.builder()
                 .setHeader(headers)
                 .setSubject(subject)
-                .setIssuer("itmo")
+                .setIssuer("exchange")
                 .setExpiration(date)
                 .signWith(signingKey, SignatureAlgorithm.HS256)
                 .compact();
