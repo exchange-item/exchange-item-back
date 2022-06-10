@@ -1,8 +1,6 @@
 package com.bakooza.bakooza.Service;
 
-import com.bakooza.bakooza.DTO.BoardRequestDTO;
-import com.bakooza.bakooza.DTO.DetailBoardResponseDTO;
-import com.bakooza.bakooza.DTO.ImageResponseDTO;
+import com.bakooza.bakooza.DTO.*;
 import com.bakooza.bakooza.Entity.Board;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,7 +11,7 @@ import java.util.List;
 @Transactional
 public interface BoardService {
 
-    public Long save(final BoardRequestDTO boardDTO);
+    public Long save(final BoardDTO boardDTO);
 
     public Page<Board> findByCategoryId(final int categoryId, final Pageable pageable);
 

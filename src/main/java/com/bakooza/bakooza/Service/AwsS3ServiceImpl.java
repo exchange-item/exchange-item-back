@@ -91,7 +91,7 @@ public class AwsS3ServiceImpl implements AwsS3Service {
 
             PostImage postImage = PostImage.builder()
                     .postId(postId)
-                    .imagePath(fileName)
+                    .imagePath("https://bakooza.s3.ap-northeast-2.amazonaws.com/" + fileName)
                     .imageSize(decimalFormat.format(size) + unit)
                     .uploadDate(LocalDate.now())
                     .build();
