@@ -1,5 +1,6 @@
 package com.bakooza.bakooza.Service;
 
+import com.bakooza.bakooza.DTO.BoardDTO;
 import com.bakooza.bakooza.DTO.BoardRequestDTO;
 import com.bakooza.bakooza.DTO.BoardResponseDTO;
 import com.bakooza.bakooza.DTO.ImageResponseDTO;
@@ -27,7 +28,7 @@ public class BoardServiceImpl implements BoardService {
 
     // 게시글 작성
     @Override
-    public Long save(final BoardRequestDTO params) {
+    public Long save(final BoardDTO params) {
         return boardRepository.save(params.toEntity()).getPostId();
     }
 
