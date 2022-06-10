@@ -21,16 +21,29 @@ spring:
     hiddenmethod:
       filter:
         enabled: true
+  spring:
+    output:
+      ansi:
+        enabled: always
 
-logging:
   level:
+    root: info
     org:
       hibernate:
         type:
           descriptor:
             sql: trace
 
+server:
+  port: 8080
+
 my:
   jwt:
     secretKey: PKuqug3YctsBr0Kv0DZeWcGstNRe9Vsc
     refreshKey: miuXdbBehAQwNZ5QGMk2ftRlHM3atoyG
+
+kakao:
+  clientId: 81ca0a296631fdb7314f692be88c2689
+  redirectUri: https://d1a4-222-117-215-187.ngrok.io/oauth/kakao/callback
+  reqTokenUrl: https://kauth.kakao.com/oauth/token
+  reqUserDataUrl: https://kapi.kakao.com/v2/user/me

@@ -7,16 +7,19 @@ import com.bakooza.bakooza.Service.AwsS3Service;
 import com.bakooza.bakooza.Service.BoardServiceImpl;
 import com.bakooza.bakooza.Service.JwtUtils;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +28,7 @@ import java.util.Map;
 @RequestMapping(value = "/boards")
 @ResponseBody
 @RequiredArgsConstructor
+@Slf4j
 public class BoardController {
 
     private final BoardServiceImpl boardService;
@@ -32,10 +36,33 @@ public class BoardController {
     private final JwtUtils jwtUtils;
 
     // 게시글 작성
-    @PostMapping()
-    public ResponseEntity<Object> save(@RequestHeader(value = "token") String token, @RequestPart final BoardRequestDTO params) {
-        Long postId = boardService.save(params);
-        return findById(postId);
+    @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE}, headers = ("content-type=multipart/form-data"))
+    public ResponseEntity<Object> save(@RequestPart(value = "accessToken") String token, @RequestBody(required = false) BoardRequestDTO params, @RequestPart(value = "multipartFile", required = false) final MultipartFile multipartFile) {
+//        boolean flag = false;
+
+        log.info("controller token = {}", token);
+        log.info("controller params = {}", params);
+        log.info("controller multipartFile = {}", multipartFile);
+        if (jwtUtils.validateToken(token)) {
+//            for (MultipartFile file : multipartFile) {
+//                if (file.isEmpty()) {
+//                    flag = true;
+//                }
+//            }
+//
+//            if (flag) { // 이미지 파일이 첨부되어 있지 않다면
+//                postId = boardService.save(params);
+//            } else { // 이미지 파일이 첨부되어 있다면
+//                postId = awsS3Service.uploadFile(multipartFile, boardService.save(params));
+//            }
+            return findById(awsS3Service.uploadFile(multipartFile, boardService.save(params)));
+        } else {
+            Map<String, Object> fail = new HashMap<>();
+            fail.put("fail", "fail");
+
+            return new ResponseEntity<>(fail, HttpStatus.UNAUTHORIZED);
+        }
+
     }
 
     // 게시판 조회
@@ -47,15 +74,15 @@ public class BoardController {
 
     // 게시글 수정
     @PatchMapping("/{postId}")
-    public ResponseEntity<Object> update(@RequestHeader(value = "token") String token, @PathVariable final Long postId, @RequestPart final BoardRequestDTO params, @RequestPart(required = false) final @NotNull List<MultipartFile> multipartFile) {
+    public ResponseEntity<Object> update(@RequestPart(value = "accessToken") String token, @PathVariable final Long postId, @RequestPart final BoardRequestDTO params, @RequestPart(required = false) final MultipartFile multipartFile) {
         if (jwtUtils.validateToken(token)) {
-            boardService.update(postId, params);
-            boolean flag = false;
-            for (MultipartFile file : multipartFile) {
-                if (file.isEmpty()) {
-                    flag = true;
-                }
-            }
+//            boardService.update(postId, params);
+            boolean flag = multipartFile.isEmpty();
+//            for (MultipartFile file : multipartFile) {
+//                if (file.isEmpty()) {
+//                    flag = true;
+//                }
+//            }
 
             List<ImageResponseDTO> entity = boardService.findByPostId(postId); // S3의 경로를 찾아오고
             for (ImageResponseDTO imageResponseDTO : entity) {

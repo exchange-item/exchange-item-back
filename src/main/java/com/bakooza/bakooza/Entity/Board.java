@@ -42,8 +42,7 @@ public class Board {
     private int isDeleted; // 글쓴이가 글을 지웠는지
 
     @Builder
-    public Board(long postId, String title, String userLocation, String content, String writer,
-        int categoryId, long memberId) {
+    public Board(long postId, String title, String userLocation, String content, String writer, int categoryId, long memberId) {
         this.postId = postId;
         this.title = title;
         this.userLocation = userLocation;
