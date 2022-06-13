@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class BoardRequestDTO {
+
     private String title; // 제목
     private String userAddress; // 작성자 주소
     private String content; // 내용
@@ -15,10 +16,10 @@ public class BoardRequestDTO {
 
     public Board toEntity() {
         return Board.builder()
-                .title(title)
-                .userAddress(userAddress)
-                .content(content)
-                .writer(writer)
-                .build();
+            .title(title)
+            .userAddress(userAddress)
+            .content(content)
+            .writer(writer)
+            .build();
     }
 }

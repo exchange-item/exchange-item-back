@@ -45,7 +45,8 @@ public class Board {
     private int isDeleted; // 글쓴이가 글을 지웠는지
 
     @Builder
-    public Board(long postId, String title, String userAddress, String content, String writer, int categoryId, long memberId) {
+    public Board(long postId, String title, String userAddress, String content, String writer,
+        int categoryId, long memberId) {
         this.postId = postId;
         this.title = title;
         this.userAddress = userAddress;
@@ -62,10 +63,11 @@ public class Board {
         this.modifiedDate = LocalDateTime.now();
     }
 
-    public void increaseViews(){
+    public void increaseViews() {
         this.views++;
     }
-    public void delete(){
+
+    public void delete() {
         this.isDeleted = 1;
     }
 }

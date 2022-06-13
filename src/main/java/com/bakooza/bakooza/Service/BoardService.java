@@ -9,13 +9,16 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 public interface BoardService {
-    public Long save(final BoardRequestDTO boardDTO);
 
-    public Page<Board> findByCategoryId(final String category, final Pageable pageable);
+    public void save(final BoardRequestDTO boardDTO);
 
-    public Long update(final Long id, final BoardRequestDTO params);
+    public Page<Board> findByCategoryId(final int categoryId, final Pageable pageable);
 
-    public Long delete(final Long id);
+    public void update(final Long id, final BoardRequestDTO params);
+
+    public int deleteExpiredPost();
+
+    public int delete(final Long postId);
 
     public Page<Board> search(final String keyword, final Pageable pageable);
 
