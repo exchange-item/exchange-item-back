@@ -30,9 +30,6 @@ public class BlackListServiceImpl implements BlackListService {
     @Override
     public Page<BlackListJoinMembershipDTO> findBlackList(Long memberId, final Pageable pageable) {
         Page<BlackListJoinMembershipDTO> blackListJoinMembershipDTO = blackListRepository.findAllByMemberId(memberId, pageable);
-        System.out.println("여기야 !!@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-        System.out.println(blackListJoinMembershipDTO.toString());
-        System.out.println("여기야 !!@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
         return blackListJoinMembershipDTO;
     }
 }
