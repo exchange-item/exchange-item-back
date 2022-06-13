@@ -24,8 +24,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     @Query(value = "SELECT * FROM board WHERE category_id = :categoryId AND is_deleted = false ORDER BY post_id DESC",
         countQuery = "SELECT COUNT(post_id) FROM Board WHERE category_id = :categoryId AND is_deleted = false",
         nativeQuery = true)
-    Page<Board> findByCategoryId(
-        final Pageable pageable);
+    Page<Board> findByCategoryId(@Param("categoryId") final int categoryId);
 
     @Modifying(clearAutomatically = true)
     @Query(value = "DELETE FROM board WHERE DATEDIFF(CURDATE(), deleted_date) >= 7", nativeQuery = true)
@@ -38,5 +37,4 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     @Modifying(clearAutomatically = true)
     @Query(value = "UPDATE board SET is_deleted = 1, deleted_date = CURDATE() WHERE post_id = :postId", nativeQuery = true)
     int saveImage(@Param("postId") Long postId);
-
 }

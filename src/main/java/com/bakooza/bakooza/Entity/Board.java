@@ -43,6 +43,7 @@ public class Board {
 
     @Builder
     public Board(Long postId, String title, String userLocation, String content, String writer, int categoryId, long memberId) {
+
         this.postId = postId;
         this.title = title;
         this.userLocation = userLocation;

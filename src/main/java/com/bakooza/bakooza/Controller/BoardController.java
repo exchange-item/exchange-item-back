@@ -135,7 +135,7 @@ public class BoardController {
      //게시글 검색
     @GetMapping("/search")
     public Page<BoardResponseDTO> search(@RequestParam final String keyword,
-                                         @PageableDefault(sort = "post_id", direction = Sort.Direction.DESC) final Pageable pageable) {
+        @PageableDefault(sort = "post_id", direction = Sort.Direction.DESC) final Pageable pageable) {
         return boardService.search(keyword, pageable).map(BoardResponseDTO::new);
     }
 
@@ -153,4 +153,10 @@ public class BoardController {
     public int deleteExpiredPost(){
         return boardService.deleteExpiredPost();
     }
+
+    // 만료된 게시글 삭제 추후 스케쥴링
+//    @DeleteMapping("/delete")
+//    public int deleteExpiredPost(){
+//        return boardService.deleteExpiredPost();
+//    }
 }
